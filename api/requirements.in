@@ -1,0 +1,6 @@
+psycopg2-binary
+databases[postgresql]
+sqlalchemy
+alembic
+fastapi
+uvicorn

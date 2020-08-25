@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  ui:
+    image: node:14.4-slim
+    volumes:
+      - ./ui:/usr/src/app
+    working_dir: /usr/src/app
+    command: yarn dev
+    tty: true
+    ports:
+      - 8010:8080
+    environment:
+      API_BASE_URL: http://localhost:8011
+  api:
+    build:
+      context: ./api
+    volumes:
+      - ./api:/usr/src/app
+    environment:
+      FLASK_ENV: development
+      UI_BASE_URL: http://localhost:8010
+    ports:
+      - 8011:8000
+    depends_on:
+      - db
+  db:
+    image: postgres:12.3-alpine
+    ports:
+      - 25432:5432
+    volumes:
+      - ./db/init.d:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    hostname: db
+
+networks:
+  default:
+    driver: bridge
