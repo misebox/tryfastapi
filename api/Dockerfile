@@ -24,16 +24,6 @@ WORKDIR /usr/src/app
 
 COPY --from=builder /opt/venv /opt/venv
 
-ENV UNAME mindgc
-
-## add user
-RUN addgroup --system ${UNAME} && \
-    adduser --system --no-create-home ${UNAME}
-RUN chown -R ${UNAME}:${UNAME} /usr/src/app && chmod -R 755 /usr/src/app
-COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
-RUN chmod +x /usr/src/app/entrypoint.sh
-USER ${UNAME}
-
 ## add app
 COPY . /usr/src/app
 

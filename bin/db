@@ -1,0 +1,3 @@
+#!/bin/bash
+
+dc run --rm api alembic $@

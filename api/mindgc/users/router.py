@@ -5,9 +5,10 @@ from fastapi import APIRouter, Depends
 from starlette.requests import Request
 from databases import Database
 
+from mindgc.utils.dbutils import get_connection
+
 from .models import users
 from .schemas import UserCreate, UserUpdate, UserSelect
-from utils.dbutils import get_connection
 
 router = APIRouter()
 

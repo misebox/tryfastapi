@@ -1,5 +1,6 @@
 import sqlalchemy
-from db import metadata, engine
+from mindgc.db import metadata
+
 
 users = sqlalchemy.Table(
     "users",
