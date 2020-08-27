@@ -8,9 +8,9 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip install --upgrade pip && pip install pip-tools
-COPY ./requirements.in .
-RUN pip-compile requirements.in >requirements.txt 2>/dev/null && pip-sync
+RUN pip install -U pip && pip install pip-tools
+COPY ./requirements.txt .
+RUN pip-sync
 
 # RUNTIME
 FROM python:3.8-slim-buster as runner

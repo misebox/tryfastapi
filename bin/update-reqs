@@ -1,0 +1,11 @@
+#!/bin/bash
+
+pdir=`cd $(dirname ${0})/..; pwd`
+
+cd $pdir
+image_id=`docker build -q --build-arg UID=${UID} --build-arg GID=${GID} -f api/Dockerfile-requirements api `
+echo "image ID: $image_id"
+echo "compiling requirements.in to requirements.txt"
+docker run --rm -v ${pdir}/api:/app ${image_id} 2>/dev/null
+sudo chown ${UID}:${GID} api/requirements.txt
+less api/requirements.txt

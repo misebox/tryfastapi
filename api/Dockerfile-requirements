@@ -1,0 +1,8 @@
+FROM python:3.8-slim-buster
+
+RUN pip install -U setuptools pip wheel
+RUN pip install pip-tools
+
+WORKDIR /app
+
+CMD ["pip-compile", "--generate-hashes", "--output-file", "requirements.txt", "requirements.in"]

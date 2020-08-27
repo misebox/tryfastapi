@@ -18,7 +18,7 @@ services:
     volumes:
       - ./api:/usr/src/app
     environment:
-      DB_URL: postgresql://root:root@db:5432/mindgc
+      DB_URL: ${DB_URL}
       FLASK_ENV: development
       UI_BASE_URL: http://localhost:8010
     ports:
