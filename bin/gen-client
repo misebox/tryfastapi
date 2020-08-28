@@ -1,0 +1,12 @@
+#!/bin/bash
+
+docker-compose up -d
+curl -O http://localhost:8011/openapi.json
+GENERATOR=javascript
+docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate -i /local/openapi.json -g ${GENERATOR} -o /local/out/${GENERATOR}
+sudo chown -R misebox:misebox out
+if [ -d ui/src/client ]
+then
+  rm -rf ui/src/client
+fi
+mv out/javascript/src ui/src/client
