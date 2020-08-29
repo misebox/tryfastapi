@@ -1,11 +1,25 @@
+import os
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 
 from mindgc.db import database
 from mindgc.users.router import router as user_router
 
+origins = [
+    os.environ["UI_BASE_URL"],
+]
 
 api = FastAPI()
+
+api.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @api.on_event("startup")
 async def startup():

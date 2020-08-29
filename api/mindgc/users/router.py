@@ -9,7 +9,6 @@ from mindgc.utils.dbutils import get_connection
 
 from .models import users
 from .schemas import UserCreate, UserUpdate, UserSelect
-
 router = APIRouter()
 
 # 入力したパスワード（平文）をハッシュ化して返します。

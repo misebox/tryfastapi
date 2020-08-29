@@ -1,20 +1,25 @@
 version: '3.7'
 services:
   ui:
-    image: node:14.4-slim
+    build:
+      context: ./ui/
+      args:
+        UID: ${VUID}
+        GID: ${VGID}
+    user: "${VUID}:${VGID}"
     volumes:
       - ./ui:/usr/src/app
     working_dir: /usr/src/app
     command: yarn dev
     tty: true
     ports:
-      - 8010:8080
+      - 8010:3000
     environment:
       API_BASE_URL: http://localhost:8011
   api:
     build:
       context: ./api
-    user: "${UID}:${GID}"
+    user: "${VUID}:${VGID}"
     volumes:
       - ./api:/usr/src/app
     environment:
