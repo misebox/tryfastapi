@@ -1,17 +1,18 @@
 <template lang="pug">
 v-layout.justify-center
   v-flex.text-center.justify-center.xs12.sm6.md6.lg4
-    v-snackbar(v-show="message" v-model="snackbar" color="primary" top="true" vertical="true" timeout="5")
-      | {{ message }}
-      template(v-slot:action="{ attrs }")
-        v-btn(dark text v-bind="attrs" @click="snackbar = false") Close
     v-card.elevation-12.mt-10
       v-toolbar(color="primary" dark flat)
-        v-toolbar-title Sign Up
+        v-toolbar-title Sign In
         v-spacer
         v-tooltip(bottom)
           template(v-slot:activator="{ on }")
-            v-btn(to="/" icon large v-on="on")
+            v-btn(
+              to="/"
+              icon
+              large
+              v-on="on"
+            )
               v-icon mdi-login
       v-card-text.justify-center.align-center
         v-form(v-model="valid" :disabled="lock")
@@ -85,7 +86,7 @@ export default {
       const that = this;
       function cb(error, data, response) {
         if (200 <= response.code && response.code < 300) {
-          that.$router.push('/login');
+          that.$router.push('/');
         } else {
           that.lock = false;
         }

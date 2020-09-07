@@ -10,6 +10,7 @@ from sqlalchemy import or_
 from mindgc.utils.dbutils import get_connection
 
 from .models import users
+from users.models import users
 from .schemas import UserCreate, UserUpdate, UserSelect
 router = APIRouter()
 
@@ -33,9 +34,8 @@ async def users_findone(id: int, database: Database = Depends(get_connection)):
     query = users.select().where(users.columns.id==id)
     return await database.fetch_one(query)
 
-# usersを新規登録します。
-@router.post("/users/create", response_model=UserSelect)
-async def users_create(user: UserCreate, database: Database = Depends(get_connection)):
+@router.post("/auth/signin", response_model=UserSelect)
+async def signin(auth_signin: AuthSignin, database: Database = Depends(get_connection)):
     # validatorは省略
     query = users.select().where(users.columns.username==user.username)
     existing = await database.fetch_one(query)
@@ -50,19 +50,3 @@ async def users_create(user: UserCreate, database: Database = Depends(get_connec
     values = get_users_insert_dict(user)
     ret = await database.execute(query, values)
     return {**user.dict()}
-
-# usersを更新します。
-@router.post("/users/update", response_model=UserSelect)
-async def users_update(user: UserUpdate, database: Database = Depends(get_connection)):
-    # validatorは省略
-    query = users.update().where(users.columns.id==user.id)
-    values=get_users_insert_dict(user)
-    ret = await database.execute(query, values)
-    return {**user.dict()}
-
-# usersを削除します。
-@router.post("/users/delete")
-async def users_delete(user: UserUpdate, database: Database = Depends(get_connection)):
-    query = users.delete().where(users.columns.id==user.id)
-    ret = await database.execute(query)
-    return {"result": "delete success"}

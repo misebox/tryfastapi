@@ -1,11 +1,16 @@
 import os
 
-from fastapi import FastAPI
+from fastapi import FastAPI, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse, PlainTextResponse
 from starlette.requests import Request
-
+from starlette.exceptions import HTTPException as StarletteHTTPException
+  
 from mindgc.db import database
 from mindgc.users.router import router as user_router
+
 
 origins = [
     os.environ["UI_BASE_URL"],
@@ -20,6 +25,18 @@ api.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"]
 )
+
+# Error handling
+@api.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    return PlainTextResponse(str(exc.detail), status_code=exc.status_code)
+
+@api.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        content=jsonable_encoder({"detail": exc.errors(), "body": exc.body}),
+    )
 
 @api.on_event("startup")
 async def startup():
